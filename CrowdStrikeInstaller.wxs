@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="CrowdStrike installer" Language="1033" Version="0.0.0.1" Manufacturer="Giuseppe Iannello" UpgradeCode="572F99DD-4FE1-4FB6-A3CF-358FE47C1260">
+        <Package Id="*" Description="A working MSI for the CrowdStrike Windows agent" Manufacturer="Giuseppe Iannello" InstallerVersion="200" Compressed="yes" />
+        <Media Id="1" Cabinet="installer.cab" EmbedCab="yes" />
+        <Property Id="CID" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles">
+                <Directory Id="Brokenloop" Name="Brokenloop">
+                    <Directory Id="INSTALLDIR" Name="CSInstaller">
+                        <Component Id="MainInstaller" Guid="C812ED9F-5365-4AD6-9A53-E470292EB35A">
+                            <File Id="WindowsSensorLionLannerEXE" Name="WindowsSensor.LionLanner.exe" Source="WindowsSensor.LionLanner.exe" KeyPath="yes" />
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
+            <ComponentRef Id="MainInstaller" />
+        </Feature>
+        <UI />
+        <CustomAction Id="EXECUTE_AFTER_FINALIZE" Execute="deferred" FileKey="WindowsSensorLionLannerEXE" Return="asyncNoWait" ExeCommand="/install /quiet /norestart CID=[CID]" Impersonate="no">
+        </CustomAction>
+        <InstallExecuteSequence>
+            <Custom Action="EXECUTE_AFTER_FINALIZE" Before="InstallFinalize">NOT Installed</Custom>
+        </InstallExecuteSequence>
+    </Product>
+</Wix>
